@@ -22,6 +22,7 @@ export interface Cars {
     description: string;
     reserved: number;
     contactId?: string;
+    location: string;
 }
 
 export type CarsShow = Omit<Cars, 'transmission' | 'pricePurchase' | 'vin' | 'datePurchase' | 'dateOverview' | 'dateOC' | 'equipment' | 'description' | 'contactId'>

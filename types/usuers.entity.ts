@@ -5,8 +5,8 @@ export interface Users {
     email: string;
     password: string;
     login: string;
-    branchId: string;
     role: string;
+    branchId: string;
 }
 
 export interface Roles {
@@ -14,6 +14,8 @@ export interface Roles {
     name: string;
 }
 
+export type UserShow = Omit<Users, 'id' | 'password' | `branchId` | 'role'>
+
 export type UserLogin = Omit<Users, 'name' | 'lastName' | 'email'>;
 
-export type Person = Omit<Users, 'id' | 'branchId' | 'role'>;
+export type Person = Omit<Users, 'id'>;
