@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {Router} from 'express'
 import {compare, hash} from "bcrypt";
 
 import {UserRecord} from "../records/user.record";
@@ -12,9 +12,9 @@ interface DataQuery {
 
 loginRouter
 
-    .get('/', async (req: Request, res: Response) => {
+    .get('/', async (req, res) => {
         const {login, password} = req.query as unknown as DataQuery
-        const user = await UserRecord.findOne(login);
+        const user = await UserRecord.findOneUser(login) as UserRecord;
         if (user !== null && user.password.length < 36) {
             res.json({login: user.login, passLength: true})
         } else if (user === null || !await compare(password, user.password)) {
@@ -28,12 +28,9 @@ loginRouter
         }
     })
 
-    .post('/', async (req: Request, res: Response) => {
+    .post('/', async (req, res) => {
         const {login, password} = req.body;
-        const user = await UserRecord.findOne(`${login}`);
-        if (user === null) {
-            throw new Error('error');
-        }
+        const user = await UserRecord.findOneUser(login) as UserRecord;
         user.password = await hash(password, 10);
         await user.setPassword();
         res.json({id: user.id});
