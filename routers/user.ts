@@ -1,61 +1,40 @@
-import {Request, Response, Router} from 'express'
+import {Router} from 'express'
+
 import {UserRecord} from "../records/user.record";
+import {BranchRecord} from "../records/branch.record";
 
 export const userRouter = Router();
 
-interface DataQuery {
-    id: string;
-    login: string;
-    branchName: string;
-}
-
 userRouter
 
-    .get('/', async (req: Request, res: Response) => {
-        const {login} = req.query as unknown as DataQuery;
-        const user = await UserRecord.findOne(login);
-        console.log(user)
-        if (user === null) {
-            res.json({login: ''});
-        } else {
-            const branch = await UserRecord.findBranchName(user.branchId);
-            res.json({login: user.login, role: user.role, branchName: branch});
-        }
+    .get('/', async (req, res) => {
+        const users = await UserRecord.findAllUsers();
+        res.json(users);
     })
 
-    .put('/', async (req: Request, res: Response) => {
-        const person = req.body;
-        console.log(person)
-        const id = await UserRecord.addUser(person);
-        res.json(id)
+    .get('/:id', async (req, res) => {
+        const user = await UserRecord.findOneUser(req.params.id);
+        const branch = await BranchRecord.findOneBranch(user.branchId);
+        res.json({login: user.login, role: user.role, branchName: branch.branchName});
     })
 
-    .get('/list', async (req: Request, res: Response) => {
-        const users = await UserRecord.findAllUsers()
-        res.json(users)
+    .post('/', async (req, res) => {
+        const user = new UserRecord(req.body);
+        await user.insertUser();
+        res.json(user.id);
     })
 
-    .get('/same-login', async (req: Request, res: Response) => {
-        const {login} = req.query as unknown as DataQuery;
-        const loginList = await UserRecord.sameLogin();
-        console.log(loginList)
-        res.json([].concat(loginList).some(el => el.login === login))
+    .put('/:id', async (req, res) => {
+        const user = new UserRecord(req.body)
+        user.id = req.params.id;
+        await user.editUser()
+        res.json(user.id)
     })
 
-    .get('/branch-id', async (req: Request, res: Response) => {
-        const {branchName} = req.query as unknown as DataQuery;
-        const branchId = await UserRecord.setBranchId(branchName);
-        res.json(branchId)
+    .delete('/:id', async (req, res) => {
+        const user = await UserRecord.findOneUser(req.params.id) as UserRecord;
+        await user.deleteUser()
+        res.json(user.id)
     })
 
-    .get('/branch', async (req: Request, res: Response) => {
-        const {id} = req.query as unknown as DataQuery
-        const data = await UserRecord.findBranchName(id);
-        res.json({name: data})
-    })
 
-    .get('/branch/name', async (req: Request, res: Response) => {
-        const branchName = await UserRecord.setBranchName();
-        console.log(branchName)
-        res.json(branchName);
-    })
