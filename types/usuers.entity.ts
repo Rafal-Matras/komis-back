@@ -1,21 +1,22 @@
-export interface Users {
-    id?: string;
+export interface SimpleUser {
     name: string;
     lastName: string;
     email: string;
-    password: string;
     login: string;
+}
+
+export interface User extends SimpleUser {
+    id?: string;
+    password: string;
     role: string;
     branchId: string;
+}
+
+export interface List extends SimpleUser {
+    branchName: string;
 }
 
 export interface Roles {
     id: string;
     name: string;
 }
-
-export type UserShow = Omit<Users, 'id' | 'password' | `branchId` | 'role'>
-
-export type UserLogin = Omit<Users, 'name' | 'lastName' | 'email'>;
-
-export type Person = Omit<Users, 'id'>;

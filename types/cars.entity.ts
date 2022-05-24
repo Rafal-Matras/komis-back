@@ -1,4 +1,4 @@
-export interface Cars {
+export interface SimpleCar {
     id?: string;
     mark: string;
     model: string;
@@ -7,12 +7,17 @@ export interface Cars {
     yearProduction: number;
     engineCapacity: string;
     power: number;
-    transmission: string;
     color: string;
     mileage: number;
     doers: number;
     seats: number;
     price: number;
+    reserved: number;
+    location: string;
+}
+
+export interface Car extends SimpleCar {
+    transmission: string;
     pricePurchase: number;
     vin: string;
     dateOverview: string;
@@ -20,12 +25,9 @@ export interface Cars {
     datePurchase: string;
     equipment: string[];
     description: string;
-    reserved: number;
     contactId?: string;
-    location: string;
 }
 
-export type CarsShow = Omit<Cars, 'transmission' | 'pricePurchase' | 'vin' | 'datePurchase' | 'dateOverview' | 'dateOC' | 'equipment' | 'description' | 'contactId'>
 
 export interface CarsEdit {
     carMark: string;
@@ -35,28 +37,10 @@ export interface CarsEdit {
     carType: string;
 }
 
-export interface CarFuels {
+
+export interface CarDescription {
     id: number;
     name: string;
+    markId?: number;
 }
 
-export interface CarTypes {
-    id: number;
-    name: string;
-}
-
-export interface CarMarks {
-    id: number;
-    name: string;
-}
-
-export interface CarModels {
-    id: number;
-    name: string;
-    markId: number;
-}
-
-export interface CarEquipments {
-    id: number;
-    name: string;
-}

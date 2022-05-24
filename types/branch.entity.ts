@@ -1,9 +1,7 @@
-export interface Branches {
+export interface Branch {
     id?: string;
-    name: string;
+    branchName: string;
     city: string;
     postCode: string;
     address: string;
 }
-
-export type Branch = Omit<Branches, 'id'>
