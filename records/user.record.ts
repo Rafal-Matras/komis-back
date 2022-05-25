@@ -55,6 +55,13 @@ export class UserRecord implements User {
         return results.length < 1 ? null : new UserRecord(results[0]);
     }
 
+    static async findOneUserLogin(login: string): Promise<User | null> {
+        const [results] = await pool.execute("SELECT * FROM `users` WHERE `login` = :login ", {
+            login,
+        }) as UsersResults;
+        return results.length < 1 ? null : new UserRecord(results[0]);
+    }
+
     async insertUser() {
         this.id = uuid()
         await pool.execute("INSERT INTO `users`(id,name,lastName,email,password,login,branchId,role)" +
@@ -82,4 +89,11 @@ export class UserRecord implements User {
         });
     }
 
+    async sameLogin(login: string) {
+        const [results] = await pool.execute("SELECT `login` FROM `users` WHERE `login` = :login", {
+            login
+        });
+        console.log(results)
+        // return results;
+    }
 }

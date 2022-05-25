@@ -44,7 +44,15 @@ export class BranchRecord implements Branch {
         const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` != :branchName ORDER BY" +
             " `branchName` ", {
             branchName: 'all',
-        })
+        }) as BranchResults;
+        return results
+    }
+
+    static async findAllBranchesNames() {
+        const [results] = await pool.execute("SELECT `branchName` FROM `branch` WHERE `branchName` != :branchName" +
+            " ORDER BY `branchName` ", {
+            branchName: 'all',
+        }) as BranchResults;
         return results
     }
 
@@ -53,6 +61,13 @@ export class BranchRecord implements Branch {
             id,
         }) as BranchResults;
         return results.length < 1 ? null : new BranchRecord(results[0]);
+    }
+
+    static async findOneBranchName(name: string) {
+        const [results] = await pool.execute("SELECT `id` FROM `branch` WHERE `branchName` = :name", {
+            name,
+        }) as BranchResults;
+        return results[0].id
     }
 
     async insertBranch(): Promise<void> {

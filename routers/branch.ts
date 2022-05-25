@@ -8,7 +8,12 @@ branchRouter
 
     .get('/all', async (req, res) => {
         const branches = await BranchRecord.findAllBranches();
-        res.json({branches})
+        res.json(branches)
+    })
+
+    .get('/all/names', async (req, res) => {
+        const branches = await BranchRecord.findAllBranchesNames();
+        res.json(branches)
     })
 
     .get('/:id', async (req, res) => {
