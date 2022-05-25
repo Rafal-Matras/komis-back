@@ -1,9 +1,11 @@
 import {createPool} from 'mysql2/promise';
+import {config} from "../config/config";
 
 export const pool = createPool({
-    host: '0.0.0.0',
-    user: 'root',
-    database: 'komis',
+    host: config.dbHost,
+    user: config.dbUser,
+    password: config.dbPassword,
+    database: config.dbDatabase,
     namedPlaceholders: true,
     decimalNumbers: true,
 });
