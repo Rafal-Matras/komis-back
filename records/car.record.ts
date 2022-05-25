@@ -2,10 +2,11 @@ import {pool} from '../utils/db';
 import {FieldPacket} from "mysql2";
 import {v4 as uuid} from 'uuid';
 
-import {Cars} from "../types";
+import {Car} from "../types";
 
+type CarResults = [Car[], FieldPacket[]]
 
-export class CarRecord {
+export class CarRecord implements Car {
     id?: string;
     mark: string;
     model: string;
@@ -31,7 +32,7 @@ export class CarRecord {
     contactId?: string;
     location: string;
 
-    constructor(obj: Cars) {
+    constructor(obj: Car) {
 
         this.id = obj.id;
         this.mark = obj.mark;
@@ -59,21 +60,38 @@ export class CarRecord {
         this.location = obj.location;
     }
 
-    static async findAll() {
-        const [results] = await pool.execute("SELECT * FROM `cars`") as [CarRecord[], FieldPacket[]];
-        return results.length < 1 ? null : results
+    static async findAllCars() {
+        const [results] = await pool.execute("SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`, `engineCapacity`, `power`, `color`, `mileage`, `doers`, `seats`, `price` FROM `cars`") as CarResults;
+        return results.length < 1 ? null : results;
     }
 
-    static async findOne(id: string): Promise<CarRecord | null> {
+    static async findOneCar(id: string): Promise<CarRecord | null> {
         const [results] = await pool.execute("SELECT * FROM `cars` WHERE `id` = :id ", {
             id,
-        }) as [CarRecord[], FieldPacket[]];
+        }) as CarResults;
         return results.length < 1 ? null : new CarRecord(results[0]);
     }
 
     static async getEquipment() {
         const [results] = await pool.execute("SELECT `name` FROM `car_equipment` ");
         return results;
+    }
+
+    async insertCar() {
+        this.id = uuid();
+        await pool.execute("INSERT INTO `cars`( mark, model, type, fuel, yearProduction, engineCapacity, power, transmission, color, mileage, doers, seats, price, pricePurchase, vin, dateOverview, dataOc, datePurchase, equipment, description, reserved, contract) VALUES ( :mark, :model, :type, :fuel, :yearProduction, :engineCapacity, :power, :transmission, :color, :mileage, :doers, :seats, :price, :pricePurchase, :vin, :dateOverview, :dataOc, :datePurchase, :equipment, :description, :reserved, :contract)", this);
+        return this.id;
+    }
+
+    async editCar() {
+        await pool.execute("UPDATE `cars` SET `mark` = :mark, `model` = :model, `type` = :type, `fuel` = :fuel,`yearProduction` = :yearProduction, `engineCapacity` = :engineCapacity, `power` = :power,`transmission` = :transmission, `color` = :color, `mileage` =: mileage, `doers` = :doers, `seats` = :seats, `price` = :price, `pricePurchase` = :pricePurchase, `vin` = :vin, `dateOverview` = :dateOverview, `dataOc` = :dataOc, `datePurchase` = :datePurchase, `equipment` = :equipment, `description` = :description, `reserved` = :reserved, `contract` = :contract WHERE id = :id", this);
+        return this.id;
+    }
+
+    async deleteCar() {
+        await pool.execute("DELETE FROM `cars` WHERE `id` = :id", {
+            id: this.id
+        })
     }
 
     static async addEquipment(name: string) {

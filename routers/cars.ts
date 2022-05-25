@@ -6,6 +6,35 @@ export const carsRouter = Router();
 
 carsRouter
 
+    .get('/', async (req, res) => {
+        const cars = await CarRecord.findAllCars();
+        res.json(cars)
+    })
+
+    .get('/:id', async (req, res) => {
+        const car = await CarRecord.findOneCar(req.params.id);
+        res.json(car);
+    })
+
+    .post('/', async (req, res) => {
+        const car = new CarRecord(req.body);
+        await car.insertCar();
+        res.json(car);
+    })
+
+    .put('/:id', async (req, res) => {
+        const car = new CarRecord(req.body);
+        car.id = req.params.id;
+        await car.editCar();
+        res.json(car.id);
+    })
+
+    .delete('/:id', async (req, res) => {
+        const car = await CarRecord.findOneCar(req.params.id) as CarRecord;
+        await car.deleteCar();
+        res.json(car.id);
+    })
+
     .get('/equipment', async (req: Request, res: Response) => {
         const equipment = await CarRecord.getEquipment();
         res.json(equipment);
