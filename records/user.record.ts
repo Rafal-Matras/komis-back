@@ -70,30 +70,22 @@ export class UserRecord implements User {
     }
 
     async editUser() {
-        await pool.execute("UPDATE `users` SET `name` = :name, `lastName` = :lastName, `email` = :email, `login` =" +
-            " :login, `branchId` = :branchId, `role` = :role WHERE `id` = :id", this);
+        await pool.execute("UPDATE `users` SET `name` = :name, `lastName` = :lastName, `email` = :email, `login` = :login, `password` = :password, `branchId` = :branchId, `role` = :role WHERE `id` = :id", this);
         return this.id
     }
 
     async deleteUser() {
-        await pool.execute("DELETE FROM `users` WHERE `id` = :id", {
-            id: this.id,
+        await pool.execute("DELETE FROM `users` WHERE `login` = :login", {
+            login: this.login,
         });
         return this.id
     }
 
     async setPassword() {
-        await pool.execute("UPDATE `users` SET `password` = :password WHERE `id` = :id ", {
-            id: this.id,
+        await pool.execute("UPDATE `users` SET `password` = :password WHERE `login` = :login ", {
+            login: this.login,
             password: this.password,
         });
     }
 
-    async sameLogin(login: string) {
-        const [results] = await pool.execute("SELECT `login` FROM `users` WHERE `login` = :login", {
-            login
-        });
-        console.log(results)
-        // return results;
-    }
 }

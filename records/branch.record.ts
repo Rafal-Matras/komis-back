@@ -41,16 +41,14 @@ export class BranchRecord implements Branch {
     }
 
     static async findAllBranches() {
-        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` != :branchName ORDER BY" +
-            " `branchName` ", {
+        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ", {
             branchName: 'all',
         }) as BranchResults;
         return results
     }
 
     static async findAllBranchesNames() {
-        const [results] = await pool.execute("SELECT `branchName` FROM `branch` WHERE `branchName` != :branchName" +
-            " ORDER BY `branchName` ", {
+        const [results] = await pool.execute("SELECT `branchName` FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ", {
             branchName: 'all',
         }) as BranchResults;
         return results
@@ -64,37 +62,32 @@ export class BranchRecord implements Branch {
     }
 
     static async findOneBranchName(name: string) {
-        const [results] = await pool.execute("SELECT `id` FROM `branch` WHERE `branchName` = :name", {
+        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` = :name", {
             name,
         }) as BranchResults;
-        return results[0].id
+        return results.length < 1 ? null : new BranchRecord(results[0]);
     }
 
-    async insertBranch(): Promise<void> {
+    async insertBranch() {
         if (!this.id) {
             this.id = uuid()
         } else {
             throw new Error('nie można zmienić istniejące pole')
         }
-        await pool.execute("INSERT INTO `branch` (`id`,`branchName`,`city`,`postCode`,`address`) VALUES" +
-            " (:id,:branchName,:city,:postCode,:address) ", this)
+        await pool.execute("INSERT INTO `branch` (`id`,`branchName`,`city`,`postCode`,`address`) VALUES (:id,:branchName,:city,:postCode,:address) ", this);
+        return this.id;
     }
 
-    async editBranch(): Promise<void> {
+    async editBranch() {
         await pool.execute("UPDATE `branch` SET `branchName` = :branchName, `city` = :city, `postCode` = :postCode," +
-            " `address` = :address WHERE `id` = :id", {
-            id: this.id,
+            " `address` = :address WHERE `id` = :id", this);
+        return this.id;
+    }
+
+    async deleteBranch() {
+        await pool.execute("DELETE FROM `branch` WHERE `branchName` = :branchName", {
             branchName: this.branchName,
-            city: this.city,
-            postCode: this.postCode,
-            address: this.address,
-        })
+        });
+        return this.id;
     }
-
-    async deleteBranch(): Promise<void> {
-        await pool.execute("DELETE FROM `branch` WHERE `id` = :id", {
-            id: this.id,
-        })
-    }
-
 }

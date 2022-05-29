@@ -21,30 +21,46 @@ userRouter
     .get('/checklogin/:login', async (req, res) => {
         const user = await UserRecord.findOneUserLogin(req.params.login);
         if (user) {
-            res.json(true)
+            res.json(true);
         } else {
-            res.json(false)
+            res.json(false);
         }
     })
 
     .post('/', async (req, res) => {
         const user = new UserRecord(req.body);
-        user.branchId = await BranchRecord.findOneBranchName(user.branchId);
+        const branchId = await BranchRecord.findOneBranchName(user.branchId);
+        user.branchId = branchId.id;
         await user.insertUser();
         res.json(user.id);
     })
 
-    .put('/:id', async (req, res) => {
-        const user = new UserRecord(req.body)
-        user.id = req.params.id;
-        await user.editUser()
-        res.json(user.id)
+    .put('/setpassword', async (req, res) => {
+        const user = await UserRecord.findOneUserLogin(req.body.login) as UserRecord;
+        user.password = req.body.password;
+        await user.editUser();
+        res.json(user.id);
     })
 
-    .delete('/:id', async (req, res) => {
-        const user = await UserRecord.findOneUser(req.params.id) as UserRecord;
-        await user.deleteUser()
-        res.json(user.id)
+    .put('/edit/:login', async (req, res) => {
+        const {name, lastName, login, email, role, branchId} = req.body;
+        const user = await UserRecord.findOneUserLogin(req.params.login) as UserRecord;
+        const branch = await BranchRecord.findOneBranchName(branchId);
+        user.name = name;
+        user.lastName = lastName;
+        user.email = email;
+        user.login = login;
+        user.role = role;
+        user.branchId = branch.id;
+        await user.editUser();
+        const data = `${user.name}${user.lastName}${user.email}${user.login}${user.branchId}`
+        res.json(data);
+    })
+
+    .delete('/:login', async (req, res) => {
+        const user = await UserRecord.findOneUserLogin(req.params.login) as UserRecord;
+        await user.deleteUser();
+        res.json(user.id);
     })
 
 
