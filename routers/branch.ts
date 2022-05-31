@@ -1,5 +1,6 @@
 import {Router} from 'express'
 import {BranchRecord} from "../records/branch.record";
+import {UserRecord} from "../records/user.record";
 
 export const branchRouter = Router();
 
@@ -19,6 +20,13 @@ branchRouter
         const branch = await BranchRecord.findOneBranch(req.params.id);
         res.json(branch);
     })
+
+    .get('/usersLeft/:name', async (req, res) => {
+        const branch = await BranchRecord.findOneBranchName(req.params.name);
+        const userLeft = await UserRecord.findUsersBranch(branch.id);
+        userLeft.length < 1 ? res.json(false) : res.json(true);
+    })
+
 
     .post('/', async (req, res) => {
         const branch = new BranchRecord(req.body);

@@ -26,7 +26,7 @@ loginRouter
 
     .post('/', async (req, res) => {
         const {login, password} = req.body;
-        const user = await UserRecord.findOneUser(login) as UserRecord;
+        const user = await UserRecord.findOneUserLogin(login) as UserRecord;
         user.password = await hash(password, 10);
         await user.setPassword();
         res.json({id: user.id});

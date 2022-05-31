@@ -74,7 +74,7 @@ export class BranchRecord implements Branch {
         } else {
             throw new Error('nie można zmienić istniejące pole')
         }
-        await pool.execute("INSERT INTO `branch` (`id`,`branchName`,`city`,`postCode`,`address`) VALUES (:id,:branchName,:city,:postCode,:address) ", this);
+        await pool.execute("INSERT INTO `branch` (id,branchName,city,postCode,address) VALUES (:id,:branchName,:city,:postCode,:address) ", this);
         return this.id;
     }
 
@@ -85,9 +85,7 @@ export class BranchRecord implements Branch {
     }
 
     async deleteBranch() {
-        await pool.execute("DELETE FROM `branch` WHERE `branchName` = :branchName", {
-            branchName: this.branchName,
-        });
+        await pool.execute("DELETE FROM `branch` WHERE `branchName` = :branchName", this);
         return this.id;
     }
 }

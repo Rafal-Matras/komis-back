@@ -42,10 +42,15 @@ export class UserRecord implements User {
     }
 
     static async findAllUsers() {
-        const [results] = await pool.execute(
-            "SELECT `name`,`lastName`,`email`,`login`,`branchName` FROM" +
-            " `users` JOIN `branch` ON `branch`.`id` = `users`.`branchId` ORDER BY `lastName`") as UsersResults;
+        const [results] = await pool.execute("SELECT `name`,`lastName`,`email`,`login`,`branchName` FROM `users` JOIN `branch` ON `branch`.`id` = `users`.`branchId` ORDER BY `lastName`") as UsersResults;
         return results
+    }
+
+    static async findUsersBranch(id: string) {
+        const [results] = await pool.execute("SELECT `name` FROM `users` WHERE `branchId` = :id", {
+            id
+        }) as UsersResults;
+        return results;
     }
 
     static async findOneUser(id: string): Promise<User | null> {
@@ -64,8 +69,7 @@ export class UserRecord implements User {
 
     async insertUser() {
         this.id = uuid()
-        await pool.execute("INSERT INTO `users`(id,name,lastName,email,password,login,branchId,role)" +
-            " VALUES(:id,:name,:lastName,:email,:password,:login,:branchId,:role)", this);
+        await pool.execute("INSERT INTO `users`(id,name,lastName,email,password,login,branchId,role) VALUES(:id,:name,:lastName,:email,:password,:login,:branchId,:role)", this);
         return this.id
     }
 
@@ -82,8 +86,8 @@ export class UserRecord implements User {
     }
 
     async setPassword() {
-        await pool.execute("UPDATE `users` SET `password` = :password WHERE `login` = :login ", {
-            login: this.login,
+        await pool.execute("UPDATE `users` SET `password` = :password WHERE `id` = :id ", {
+            id: this.id,
             password: this.password,
         });
     }

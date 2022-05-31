@@ -28,19 +28,23 @@ export interface Car extends SimpleCar {
     contactId?: string;
 }
 
+//
+// export interface CarsEdit {
+//     carMark: string;
+//     carModel: string;
+//     carEquipment: string;
+//     carFuel: string;
+//     carType: string;
+// }
 
-export interface CarsEdit {
-    carMark: string;
-    carModel: string;
-    carEquipment: string;
-    carFuel: string;
-    carType: string;
-}
 
-
-export interface CarDescription {
-    id: number;
+export interface SimpleCarEdit {
     name: string;
-    markId?: number;
 }
+
+export interface CarEdit extends SimpleCarEdit {
+    id?: string;
+    markId?: string;
+}
+
 

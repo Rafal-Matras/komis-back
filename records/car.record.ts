@@ -1,7 +1,7 @@
-import {pool} from '../utils/db';
 import {FieldPacket} from "mysql2";
 import {v4 as uuid} from 'uuid';
 
+import {pool} from '../utils/db';
 import {Car} from "../types";
 
 type CarResults = [Car[], FieldPacket[]]
@@ -94,71 +94,4 @@ export class CarRecord implements Car {
         })
     }
 
-    static async addEquipment(name: string) {
-        const id = uuid();
-        await pool.execute("INSERT INTO `car_equipment` (id,name) VALUES (:id,:name)", {
-            id,
-            name,
-        });
-        return id
-    }
-
-    static async getFuel() {
-        const [results] = await pool.execute("SELECT `name` FROM `car_fuel`");
-        return results;
-    }
-
-    static async addFuel(name: string) {
-        const id = uuid();
-        await pool.execute("INSERT INTO `car_fuel` (id,name) VALUES (:id,:name)", {
-            id,
-            name,
-        });
-        return id
-    }
-
-    static async getMark() {
-        const [results] = await pool.execute("SELECT `name` FROM `car_mark`");
-        return results;
-    }
-
-    static async addMark(name: string) {
-        const id = uuid();
-        await pool.execute("INSERT INTO `car_mark` (id,name) VALUES (:id,:name)", {
-            id,
-            name,
-        });
-        return id
-    }
-
-    static async getModel(idMark: number) {
-        const [results] = await pool.execute("SELECT `name` FROM `car_model` WHERE `mark_id` = :idMark", {
-            idMark,
-        });
-        return results;
-    }
-
-    static async addModel(idMark: string, name: string) {
-        const id = uuid();
-        await pool.execute("INSERT INTO `car_model` (id,name,mark_id) VALUES (:id,:name,:idMark)", {
-            id,
-            name,
-            idMark,
-        });
-        return id
-    }
-
-    static async getType() {
-        const [results] = await pool.execute("SELECT `name` FROM `car_type`");
-        return results;
-    }
-
-    static async addType(name: string) {
-        const id = uuid();
-        await pool.execute("INSERT INTO `car_type` (id,name) VALUES (:id,:name)", {
-            id,
-            name,
-        });
-        return id
-    }
 }
