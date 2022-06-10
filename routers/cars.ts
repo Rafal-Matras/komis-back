@@ -2,6 +2,7 @@ import {Router} from 'express';
 
 import {CarRecord} from "../records/car.record";
 import {EditCarRecord} from "../records/editCar.record";
+import {BranchRecord} from "../records/branch.record";
 
 interface DataQuery {
     name: string;
@@ -12,8 +13,16 @@ export const carsRouter = Router();
 
 carsRouter
 
+    //--------------CarRecord---------------
+
     .get('/', async (req, res) => {
         const cars = await CarRecord.findAllCars();
+        res.json(cars);
+    })
+
+    .get('/views/:location', async (req, res) => {
+        const location = await BranchRecord.findOneBranchName(req.params.location);
+        const cars = await CarRecord.findAllCarsViews(location.id);
         res.json(cars);
     })
 
@@ -41,18 +50,12 @@ carsRouter
         res.json(car.id);
     })
 
-    //-------------Admin ADD/Remove Car Items----------
-
-
-    .get('/edit/all', async (req, res) => {
-        const marks = await EditCarRecord.findAllMarks();
-        res.json(marks);
-    })
+    //--------------EditCarsRecords-------------
 
     .get('/edit/car/', async (req, res) => {
         const {name, model} = req.query as unknown as DataQuery;
         let id = '';
-        if (name === 'model' && model !== '0') {
+        if (name === 'model' && model !== 'select') {
             const carId = await EditCarRecord.findOneMark(model);
             id = carId.id;
         }

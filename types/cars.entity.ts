@@ -4,39 +4,30 @@ export interface SimpleCar {
     model: string;
     type: string;
     fuel: string;
-    yearProduction: number;
+    yearProduction: string;
     engineCapacity: string;
-    power: number;
+    power: string;
     color: string;
-    mileage: number;
-    doers: number;
-    seats: number;
-    price: number;
-    reserved: number;
+    mileage: string;
+    doers: string;
+    seats: string;
+    price: string;
+    reserved: string;
+    sold: string;
     location: string;
 }
 
 export interface Car extends SimpleCar {
     transmission: string;
-    pricePurchase: number;
+    pricePurchase: string;
     vin: string;
     dateOverview: string;
     dateOC: string;
     datePurchase: string;
-    equipment: string[];
+    equipment: string;
     description: string;
-    contactId?: string;
+    advance: string;
 }
-
-//
-// export interface CarsEdit {
-//     carMark: string;
-//     carModel: string;
-//     carEquipment: string;
-//     carFuel: string;
-//     carType: string;
-// }
-
 
 export interface SimpleCarEdit {
     name: string;

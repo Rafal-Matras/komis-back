@@ -27,6 +27,11 @@ branchRouter
         userLeft.length < 1 ? res.json(false) : res.json(true);
     })
 
+    .get('/getid/:name', async (req, res) => {
+        const branch = await BranchRecord.findOneBranchName(req.params.name);
+        res.json(branch.id);
+    })
+
 
     .post('/', async (req, res) => {
         const branch = new BranchRecord(req.body);

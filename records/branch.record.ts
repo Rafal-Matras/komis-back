@@ -13,6 +13,7 @@ export class BranchRecord implements Branch {
     city: string;
     postCode: string;
     address: string;
+    phone: string;
 
     constructor(obj: Branch) {
 
@@ -37,7 +38,7 @@ export class BranchRecord implements Branch {
         this.city = obj.city;
         this.postCode = obj.postCode;
         this.address = obj.address;
-
+        this.phone = obj.phone;
     }
 
     static async findAllBranches() {
@@ -54,7 +55,7 @@ export class BranchRecord implements Branch {
         return results
     }
 
-    static async findOneBranch(id: string): Promise<Branch | null> {
+    static async findOneBranch(id: string) {
         const [results] = await pool.execute("SELECT * FROM `branch` WHERE `id` = :id", {
             id,
         }) as BranchResults;

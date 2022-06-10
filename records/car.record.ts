@@ -3,6 +3,7 @@ import {v4 as uuid} from 'uuid';
 
 import {pool} from '../utils/db';
 import {Car} from "../types";
+import {ValidationError} from "../utils/errors";
 
 type CarResults = [Car[], FieldPacket[]]
 
@@ -12,27 +13,32 @@ export class CarRecord implements Car {
     model: string;
     type: string;
     fuel: string;
-    yearProduction: number;
+    yearProduction: string;
     engineCapacity: string;
-    power: number;
+    power: string;
     transmission: string;
     color: string;
-    mileage: number;
-    doers: number;
-    seats: number;
-    price: number;
-    pricePurchase: number;
+    mileage: string;
+    doers: string;
+    seats: string;
+    price: string;
+    pricePurchase: string;
     vin: string;
     dateOverview: string;
     dateOC: string;
     datePurchase: string;
-    equipment: string[];
+    equipment: string;
     description: string;
-    reserved: number;
-    contactId?: string;
+    reserved: string;
+    sold: string;
+    advance: string;
     location: string;
 
     constructor(obj: Car) {
+
+        if (!obj.mark || obj.mark.length > 15) {
+            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.')
+        }
 
         this.id = obj.id;
         this.mark = obj.mark;
@@ -56,12 +62,21 @@ export class CarRecord implements Car {
         this.equipment = obj.equipment;
         this.description = obj.description;
         this.reserved = obj.reserved;
-        this.contactId = obj.contactId;
+        this.sold = obj.sold;
+        this.advance = obj.advance;
         this.location = obj.location;
     }
 
     static async findAllCars() {
-        const [results] = await pool.execute("SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`, `engineCapacity`, `power`, `color`, `mileage`, `doers`, `seats`, `price` FROM `cars`") as CarResults;
+        const [results] = await pool.execute("SELECT * FROM `cars`") as CarResults;
+        return results.length < 1 ? null : results;
+    }
+
+    static async findAllCarsViews(location: string) {
+        const [results] = await pool.execute("SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`, `doers`, `seats`, `price`, `reserved`, `advance` FROM `cars` WHERE `location` = :location AND `sold` = :sold", {
+            location,
+            sold: 'N'
+        }) as CarResults;
         return results.length < 1 ? null : results;
     }
 
@@ -72,19 +87,20 @@ export class CarRecord implements Car {
         return results.length < 1 ? null : new CarRecord(results[0]);
     }
 
-    static async getEquipment() {
-        const [results] = await pool.execute("SELECT `name` FROM `car_equipment` ");
-        return results;
-    }
-
     async insertCar() {
-        this.id = uuid();
-        await pool.execute("INSERT INTO `cars`( mark, model, type, fuel, yearProduction, engineCapacity, power, transmission, color, mileage, doers, seats, price, pricePurchase, vin, dateOverview, dataOc, datePurchase, equipment, description, reserved, contract) VALUES ( :mark, :model, :type, :fuel, :yearProduction, :engineCapacity, :power, :transmission, :color, :mileage, :doers, :seats, :price, :pricePurchase, :vin, :dateOverview, :dataOc, :datePurchase, :equipment, :description, :reserved, :contract)", this);
+        if (!this.id) {
+            this.id = uuid()
+        } else {
+            throw new Error('nie można zmienić istniejące pole')
+        }
+        await pool.execute("INSERT INTO `cars` (id,mark,model,type,fuel,yearProduction,engineCapacity,power,transmission,color,mileage,doers,seats,price,pricePurchase,vin,dateOverview,dateOC,datePurchase,equipment,description,reserved,sold,advance,location) VALUES (:id,:mark,:model,:type,:fuel,:yearProduction,:engineCapacity,:power,:transmission,:color,:mileage,:doers,:seats,:price,:pricePurchase,:vin,:dateOverview,:dateOC,:datePurchase,:equipment,:description,:reserved,:sold,:advance,:location) ", this);
         return this.id;
     }
 
     async editCar() {
-        await pool.execute("UPDATE `cars` SET `mark` = :mark, `model` = :model, `type` = :type, `fuel` = :fuel,`yearProduction` = :yearProduction, `engineCapacity` = :engineCapacity, `power` = :power,`transmission` = :transmission, `color` = :color, `mileage` =: mileage, `doers` = :doers, `seats` = :seats, `price` = :price, `pricePurchase` = :pricePurchase, `vin` = :vin, `dateOverview` = :dateOverview, `dataOc` = :dataOc, `datePurchase` = :datePurchase, `equipment` = :equipment, `description` = :description, `reserved` = :reserved, `contract` = :contract WHERE id = :id", this);
+        console.log(this.reserved)
+        await pool.execute("UPDATE `cars` SET `id` = :id, `mark` = :mark, `model` = :model, `type` = :type, `fuel` = :fuel, `yearProduction` = :yearProduction, `engineCapacity` = :engineCapacity, `power` = :power, `transmission` = :transmission, `color` = :color, `mileage` = :mileage, `doers` = :doers, `seats` = :seats, `price` = :price, `pricePurchase` = :pricePurchase, `vin` = :vin, `dateOverview` = :dateOverview, `dateOC` = :dateOC, `datePurchase` = :datePurchase, `equipment` = :equipment, `description` = :description, `reserved` = :reserved, `sold` = :sold, `advance` = :advance, `location` = :location WHERE `id` = :id ", this);
+        console.log('dodano')
         return this.id;
     }
 
@@ -95,3 +111,4 @@ export class CarRecord implements Car {
     }
 
 }
+

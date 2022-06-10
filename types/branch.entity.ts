@@ -4,4 +4,5 @@ export interface Branch {
     city: string;
     postCode: string;
     address: string;
+    phone: string;
 }
