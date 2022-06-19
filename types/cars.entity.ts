@@ -19,11 +19,13 @@ export interface SimpleCar {
 
 export interface Car extends SimpleCar {
     transmission: string;
+    drive: string;
     pricePurchase: string;
     vin: string;
     dateOverview: string;
     dateOC: string;
     datePurchase: string;
+    registration: string;
     equipment: string;
     description: string;
     advance: string;
@@ -36,6 +38,15 @@ export interface SimpleCarEdit {
 export interface CarEdit extends SimpleCarEdit {
     id?: string;
     markId?: string;
+}
+
+export interface CarBuy {
+    mark: string;
+    model: string;
+    yearProduction: string;
+    vin: string;
+    registration: string;
+    mileage: string;
 }
 
 

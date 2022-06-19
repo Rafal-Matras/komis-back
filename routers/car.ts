@@ -1,8 +1,8 @@
 import {Router} from 'express';
 
-import {CarRecord} from "../records/car.record";
-import {EditCarRecord} from "../records/editCar.record";
-import {BranchRecord} from "../records/branch.record";
+import {CarRecord} from '../records/car.record';
+import {EditCarRecord} from '../records/editCar.record';
+import {BranchRecord} from '../records/branch.record';
 
 interface DataQuery {
     name: string;

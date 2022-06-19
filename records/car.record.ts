@@ -1,9 +1,9 @@
-import {FieldPacket} from "mysql2";
+import {FieldPacket} from 'mysql2';
 import {v4 as uuid} from 'uuid';
 
 import {pool} from '../utils/db';
-import {Car} from "../types";
-import {ValidationError} from "../utils/errors";
+import {Car} from '../types';
+import {ValidationError} from '../utils/errors';
 
 type CarResults = [Car[], FieldPacket[]]
 
@@ -17,6 +17,7 @@ export class CarRecord implements Car {
     engineCapacity: string;
     power: string;
     transmission: string;
+    drive: string;
     color: string;
     mileage: string;
     doers: string;
@@ -27,6 +28,7 @@ export class CarRecord implements Car {
     dateOverview: string;
     dateOC: string;
     datePurchase: string;
+    registration: string;
     equipment: string;
     description: string;
     reserved: string;
@@ -51,6 +53,7 @@ export class CarRecord implements Car {
         this.transmission = obj.transmission;
         this.color = obj.color;
         this.mileage = obj.mileage;
+        this.drive = obj.drive;
         this.doers = obj.doers;
         this.seats = obj.seats;
         this.price = obj.price;
@@ -59,6 +62,7 @@ export class CarRecord implements Car {
         this.dateOverview = obj.dateOverview;
         this.dateOC = obj.dateOC;
         this.datePurchase = obj.datePurchase;
+        this.registration = obj.registration;
         this.equipment = obj.equipment;
         this.description = obj.description;
         this.reserved = obj.reserved;
@@ -93,14 +97,13 @@ export class CarRecord implements Car {
         } else {
             throw new Error('nie można zmienić istniejące pole')
         }
-        await pool.execute("INSERT INTO `cars` (id,mark,model,type,fuel,yearProduction,engineCapacity,power,transmission,color,mileage,doers,seats,price,pricePurchase,vin,dateOverview,dateOC,datePurchase,equipment,description,reserved,sold,advance,location) VALUES (:id,:mark,:model,:type,:fuel,:yearProduction,:engineCapacity,:power,:transmission,:color,:mileage,:doers,:seats,:price,:pricePurchase,:vin,:dateOverview,:dateOC,:datePurchase,:equipment,:description,:reserved,:sold,:advance,:location) ", this);
+        await pool.execute('INSERT INTO `cars` (id,mark,model,type,fuel,yearProduction,engineCapacity,power,transmission,drive,color,mileage,doers,seats,price,pricePurchase,vin,dateOverview,dateOC,datePurchase,registration,equipment,description,reserved,sold,advance,location) VALUES (:id,:mark,:model,:type,:fuel,:yearProduction,:engineCapacity,:power,:transmission,:drive,:color,:mileage,:doers,:seats,:price,:pricePurchase,:vin,:dateOverview,:dateOC,:datePurchase,:registration,:equipment,:description,:reserved,:sold,:advance,:location)', this);
         return this.id;
     }
 
     async editCar() {
-        console.log(this.reserved)
-        await pool.execute("UPDATE `cars` SET `id` = :id, `mark` = :mark, `model` = :model, `type` = :type, `fuel` = :fuel, `yearProduction` = :yearProduction, `engineCapacity` = :engineCapacity, `power` = :power, `transmission` = :transmission, `color` = :color, `mileage` = :mileage, `doers` = :doers, `seats` = :seats, `price` = :price, `pricePurchase` = :pricePurchase, `vin` = :vin, `dateOverview` = :dateOverview, `dateOC` = :dateOC, `datePurchase` = :datePurchase, `equipment` = :equipment, `description` = :description, `reserved` = :reserved, `sold` = :sold, `advance` = :advance, `location` = :location WHERE `id` = :id ", this);
-        console.log('dodano')
+        console.log(this.reserved);
+        await pool.execute('UPDATE `cars` SET `id` = :id, `mark` = :mark, `model` = :model, `type` = :type, `fuel` = :fuel, `yearProduction` = :yearProduction, `engineCapacity` = :engineCapacity, `power` = :power, `transmission` = :transmission, `color` = :color, `mileage` = :mileage, `drive` = :drive, `doers` = :doers, `seats` = :seats, `price` = :price, `pricePurchase` = :pricePurchase, `vin` = :vin, `dateOverview` = :dateOverview, `dateOC` = :dateOC, `datePurchase` = :datePurchase, `registration` = :registration, `equipment` = :equipment, `description` = :description, `reserved` = :reserved, `sold` = :sold, `advance` = :advance, `location` = :location WHERE `id` = :id ', this);
         return this.id;
     }
 

@@ -1,21 +1,14 @@
 export interface SimpleConsumer {
-    firstName: string;
-    surName: string;
+    id?: string;
+    name: string;
     phone: string;
     email: string;
 }
 
 export interface Consumer extends SimpleConsumer {
-    id: string;
-    personalIdentityNumber?: number;
-    street?: string;
-    city?: string;
-    zipCode?: string;
-    nip?: string;
-    regon?: number;
-    firmName?: string;
-    whatWants: string;
     description: string;
+    keeper: string;
+    option: string;
 }
 
 export interface ConsumerReserved extends SimpleConsumer {
@@ -25,10 +18,10 @@ export interface ConsumerReserved extends SimpleConsumer {
 
 export interface ConsumerArrangement {
     name: string;
-    pesel?: string;
-    nip?: string;
-    document?: string;
-    documentId?: string;
+    pesel: string;
+    nip: string;
+    document: string;
+    documentId: string;
     address: string;
     postCode: string;
     city: string;

@@ -1,6 +1,6 @@
-import {Router} from 'express'
-import {BranchRecord} from "../records/branch.record";
-import {UserRecord} from "../records/user.record";
+import {Router} from 'express';
+import {BranchRecord} from '../records/branch.record';
+import {UserRecord} from '../records/user.record';
 
 export const branchRouter = Router();
 
@@ -30,6 +30,11 @@ branchRouter
     .get('/getid/:name', async (req, res) => {
         const branch = await BranchRecord.findOneBranchName(req.params.name);
         res.json(branch.id);
+    })
+
+    .get('/getcity/:name', async (req, res) => {
+        const branch = await BranchRecord.findOneBranchName(req.params.name);
+        res.json(branch);
     })
 
 
