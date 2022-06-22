@@ -13,17 +13,17 @@ export class CarRecord implements Car {
     model: string;
     type: string;
     fuel: string;
-    yearProduction: string;
-    engineCapacity: string;
-    power: string;
+    yearProduction: number;
+    engineCapacity: number;
+    power: number;
     transmission: string;
     drive: string;
     color: string;
-    mileage: string;
+    mileage: number;
     doers: string;
     seats: string;
-    price: string;
-    pricePurchase: string;
+    price: number;
+    pricePurchase: number;
     vin: string;
     dateOverview: string;
     dateOC: string;
@@ -39,7 +39,7 @@ export class CarRecord implements Car {
     constructor(obj: Car) {
 
         if (!obj.mark || obj.mark.length > 15) {
-            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.')
+            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.');
         }
 
         this.id = obj.id;
@@ -72,30 +72,43 @@ export class CarRecord implements Car {
     }
 
     static async findAllCars() {
-        const [results] = await pool.execute("SELECT * FROM `cars`") as CarResults;
+        const [results] = await pool.execute('SELECT * FROM `cars`') as CarResults;
         return results.length < 1 ? null : results;
     }
 
-    static async findAllCarsViews(location: string) {
-        const [results] = await pool.execute("SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`, `doers`, `seats`, `price`, `reserved`, `advance` FROM `cars` WHERE `location` = :location AND `sold` = :sold", {
+    static async findCarsViews(location: string) {
+        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE `location` = :location AND `sold` = :sold', {
             location,
             sold: 'N'
         }) as CarResults;
         return results.length < 1 ? null : results;
     }
 
+    static async findAllCarsViews() {
+        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE  `sold` = :sold', {
+            sold: 'N'
+        }) as CarResults;
+        return results.length < 1 ? null : results;
+    }
+
     static async findOneCar(id: string): Promise<CarRecord | null> {
-        const [results] = await pool.execute("SELECT * FROM `cars` WHERE `id` = :id ", {
+        const [results] = await pool.execute('SELECT * FROM `cars` WHERE `id` = :id ', {
             id,
         }) as CarResults;
         return results.length < 1 ? null : new CarRecord(results[0]);
     }
 
+    static async findSearchCars(name: string, value: string) {
+        const x = `SELECT * FROM cars WHERE  ${name} LIKE '%${value}%'`;
+        const [results] = await pool.execute(`${x}`);
+        console.log('data--', results);
+    }
+
     async insertCar() {
         if (!this.id) {
-            this.id = uuid()
+            this.id = uuid();
         } else {
-            throw new Error('nie można zmienić istniejące pole')
+            throw new Error('nie można zmienić istniejące pole');
         }
         await pool.execute('INSERT INTO `cars` (id,mark,model,type,fuel,yearProduction,engineCapacity,power,transmission,drive,color,mileage,doers,seats,price,pricePurchase,vin,dateOverview,dateOC,datePurchase,registration,equipment,description,reserved,sold,advance,location) VALUES (:id,:mark,:model,:type,:fuel,:yearProduction,:engineCapacity,:power,:transmission,:drive,:color,:mileage,:doers,:seats,:price,:pricePurchase,:vin,:dateOverview,:dateOC,:datePurchase,:registration,:equipment,:description,:reserved,:sold,:advance,:location)', this);
         return this.id;
@@ -108,9 +121,9 @@ export class CarRecord implements Car {
     }
 
     async deleteCar() {
-        await pool.execute("DELETE FROM `cars` WHERE `id` = :id", {
+        await pool.execute('DELETE FROM `cars` WHERE `id` = :id', {
             id: this.id
-        })
+        });
     }
 
 }

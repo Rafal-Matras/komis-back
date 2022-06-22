@@ -22,7 +22,12 @@ carsRouter
 
     .get('/views/:location', async (req, res) => {
         const location = await BranchRecord.findOneBranchName(req.params.location);
-        const cars = await CarRecord.findAllCarsViews(location.id);
+        const cars = await CarRecord.findCarsViews(location.id);
+        res.json(cars);
+    })
+
+    .get('/views-all', async (req, res) => {
+        const cars = await CarRecord.findAllCarsViews();
         res.json(cars);
     })
 
@@ -30,6 +35,16 @@ carsRouter
         const car = await CarRecord.findOneCar(req.params.id);
         res.json(car);
     })
+
+
+    .get('/search/:name/:value', async (req, res) => {
+        const {name, value} = req.params;
+        console.log('name', name);
+        console.log('value', value);
+        const cars = await CarRecord.findSearchCars(name, value);
+        // res.json(cars)
+    })
+
 
     .post('/', async (req, res) => {
         const car = new CarRecord(req.body);
@@ -52,8 +67,8 @@ carsRouter
 
     //--------------EditCarsRecords-------------
 
-    .get('/edit/car/', async (req, res) => {
-        const {name, model} = req.query as unknown as DataQuery;
+    .get('/edit/car/:name/:model?', async (req, res) => {
+        const {name, model} = req.params;
         let id = '';
         if (name === 'model' && model !== 'select') {
             const carId = await EditCarRecord.findOneMark(model);
