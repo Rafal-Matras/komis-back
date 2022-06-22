@@ -15,6 +15,12 @@ consumerRouter
         res.json(consumer);
     })
 
+    .put('/', async (req, res) => {
+        const consumer = new ConsumerRecord(req.body);
+        await consumer.editConsumer();
+        res.json(consumer);
+    })
+
     .delete('/:id', async (req, res) => {
         const consumer = await ConsumerRecord.findOne(req.params.id);
         await consumer.removeConsumer();

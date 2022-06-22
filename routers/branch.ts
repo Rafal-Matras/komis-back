@@ -14,6 +14,7 @@ branchRouter
     .get('/all/names', async (req, res) => {
         const branches = await BranchRecord.findAllBranchesNames();
         res.json(branches);
+        console.log(branches);
     })
 
     .get('/:id', async (req, res) => {

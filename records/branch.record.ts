@@ -1,9 +1,9 @@
-import {FieldPacket} from "mysql2";
+import {FieldPacket} from 'mysql2';
 import {v4 as uuid} from 'uuid';
 
-import {Branch} from '../types'
-import {ValidationError} from "../utils/errors";
-import {pool} from "../utils/db";
+import {Branch} from '../types';
+import {ValidationError} from '../utils/errors';
+import {pool} from '../utils/db';
 
 type BranchResults = [Branch[], FieldPacket[]];
 
@@ -49,7 +49,7 @@ export class BranchRecord implements Branch {
     }
 
     static async findAllBranchesNames() {
-        const [results] = await pool.execute("SELECT `branchName` FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ", {
+        const [results] = await pool.execute('SELECT `id`, `branchName` FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ', {
             branchName: 'all',
         }) as BranchResults;
         return results

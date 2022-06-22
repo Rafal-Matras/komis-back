@@ -47,6 +47,11 @@ export class ConsumerRecord implements Consumer {
         return this.id;
     }
 
+    async editConsumer() {
+        await pool.execute('UPDATE `consumers` SET `name` = :name,`phone` = :phone,`email` = :email,`description` = :description,`keeper` = :keeper,`option` = :option WHERE `id` = :id', this);
+        return this.id;
+    }
+
     async removeConsumer() {
         await pool.execute('DELETE FROM `consumers` WHERE `id` = :id', this);
         return this.id;

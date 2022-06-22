@@ -11,6 +11,7 @@ export class CompanyRecord implements Company {
     city: string;
     postCode: string;
     address: string;
+    phone: string;
     nip: string;
     regon: string;
 
@@ -21,6 +22,7 @@ export class CompanyRecord implements Company {
         this.city = obj.city;
         this.postCode = obj.postCode;
         this.address = obj.address;
+        this.phone = obj.phone;
         this.nip = obj.nip;
         this.regon = obj.regon;
 
@@ -34,7 +36,7 @@ export class CompanyRecord implements Company {
     }
 
     async updateCompany() {
-        await pool.execute('UPDATE `company` SET `name` = :name, `city` = :city, `postCode` = :postCode, `address` = :address, `nip` = :nip, `regon` = :regon', this);
+        await pool.execute('UPDATE `company` SET `name` = :name, `city` = :city, `postCode` = :postCode, `address` = :address, `phone` = :phone, `nip` = :nip, `regon` = :regon', this);
         return this;
     }
 }
