@@ -31,16 +31,6 @@ carsRouter
         res.json(car);
     })
 
-
-    // .get('/search/:name/:value', async (req, res) => {
-    //     const {name, value} = req.params;
-    //     console.log('name', name);
-    //     console.log('value', value);
-    //     const cars = await CarRecord.findSearchCars(name, value);
-    //     // res.json(cars)
-    // })
-
-
     .post('/', async (req, res) => {
         const car = new CarRecord(req.body);
         await car.insertCar();
