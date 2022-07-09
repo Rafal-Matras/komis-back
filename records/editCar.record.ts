@@ -42,6 +42,7 @@ export class EditCarRecord implements CarEdit {
         return results.length < 1 ? null : new EditCarRecord(results[0]);
     }
 
+    //-------MODEL----
     static async findAllModels(markId: string) {
         const [results] = await pool.execute('SELECT `name` FROM `car_model` WHERE `markId` = :markId ORDER BY' +
             ' `name` ASC', {
@@ -56,8 +57,6 @@ export class EditCarRecord implements CarEdit {
         }) as EditCarResults;
         return results.length < 1 ? null : new EditCarRecord(results[0]);
     }
-
-    //-------MODEL----
 
     static async findAllEquipments() {
         const [results] = await pool.execute('SELECT `name` FROM `car_equipment` ORDER BY `name` ASC');
