@@ -42,7 +42,20 @@ export class EditCarRecord implements CarEdit {
         return results.length < 1 ? null : new EditCarRecord(results[0]);
     }
 
+    static async findAllEquipments() {
+        const [results] = await pool.execute('SELECT `name` FROM `car_equipment` ORDER BY `name` ASC');
+        return results;
+    }
+
+    static async findOneEquipment(name: string) {
+        const [results] = await pool.execute('SELECT * FROM `car_equipment` WHERE `name` = :name', {
+            name
+        }) as EditCarResults;
+        return results.length < 1 ? null : new EditCarRecord(results[0]);
+    }
+
     //-------MODEL----
+
     static async findAllModels(markId: string) {
         const [results] = await pool.execute('SELECT `name` FROM `car_model` WHERE `markId` = :markId ORDER BY' +
             ' `name` ASC', {
@@ -53,18 +66,6 @@ export class EditCarRecord implements CarEdit {
 
     static async findOneModel(name: string) {
         const [results] = await pool.execute('SELECT * FROM `car_model` WHERE `name` = :name', {
-            name
-        }) as EditCarResults;
-        return results.length < 1 ? null : new EditCarRecord(results[0]);
-    }
-
-    static async findAllEquipments() {
-        const [results] = await pool.execute('SELECT `name` FROM `car_equipment` ORDER BY `name` ASC');
-        return results;
-    }
-
-    static async findOneEquipment(name: string) {
-        const [results] = await pool.execute('SELECT * FROM `car_equipment` WHERE `name` = :name', {
             name
         }) as EditCarResults;
         return results.length < 1 ? null : new EditCarRecord(results[0]);
@@ -112,7 +113,7 @@ export class EditCarRecord implements CarEdit {
     async addModel() {
         this.id = uuid();
         console.log();
-        await pool.execute('INSERT INTO `car_model` (id,name,mark_id) VALUES (:id,:name,:markId)', this);
+        await pool.execute('INSERT INTO `car_model` (id,name,markId) VALUES (:id,:name,:markId)', this);
         return this.id;
     }
 
