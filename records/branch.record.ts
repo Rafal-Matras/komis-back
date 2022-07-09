@@ -17,20 +17,20 @@ export class BranchRecord implements Branch {
 
     constructor(obj: Branch) {
 
-        if (!obj.branchName || obj.branchName.length > 20) {
-            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.')
+        if (!obj.branchName || obj.branchName.length > 6) {
+            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.');
         }
-
         if (!obj.city || obj.city.length > 20) {
-            throw new ValidationError('miasto nie może być puste ani przekraczać 20 znaków.')
+            throw new ValidationError('miasto nie może być puste ani przekraczać 20 znaków.');
         }
-
         if (!obj.postCode || obj.postCode.length > 6) {
-            throw new ValidationError('kod pocztowy nie może być pusty ani przekraczać 6 znaków.')
+            throw new ValidationError('kod pocztowy nie może być pusty ani przekraczać 6 znaków.');
         }
-
         if (!obj.address || obj.address.length > 60) {
-            throw new ValidationError('adres nie może być pusty ani przekraczać 60 znaków.')
+            throw new ValidationError('adres nie może być pusty ani przekraczać 60 znaków.');
+        }
+        if (!obj.phone || obj.phone.length > 14) {
+            throw new ValidationError('telefon nie może być pusty ani przekraczać 14 znaków.');
         }
 
         this.id = obj.id;
@@ -42,28 +42,28 @@ export class BranchRecord implements Branch {
     }
 
     static async findAllBranches() {
-        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ", {
+        const [results] = await pool.execute('SELECT * FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ', {
             branchName: 'all',
         }) as BranchResults;
-        return results
+        return results;
     }
 
     static async findAllBranchesNames() {
         const [results] = await pool.execute('SELECT `id`, `branchName` FROM `branch` WHERE `branchName` != :branchName ORDER BY `branchName` ', {
             branchName: 'all',
         }) as BranchResults;
-        return results
+        return results;
     }
 
     static async findOneBranch(id: string) {
-        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `id` = :id", {
+        const [results] = await pool.execute('SELECT * FROM `branch` WHERE `id` = :id', {
             id,
         }) as BranchResults;
         return results.length < 1 ? null : new BranchRecord(results[0]);
     }
 
     static async findOneBranchName(name: string) {
-        const [results] = await pool.execute("SELECT * FROM `branch` WHERE `branchName` = :name", {
+        const [results] = await pool.execute('SELECT * FROM `branch` WHERE `branchName` = :name', {
             name,
         }) as BranchResults;
         return results.length < 1 ? null : new BranchRecord(results[0]);
@@ -71,22 +71,22 @@ export class BranchRecord implements Branch {
 
     async insertBranch() {
         if (!this.id) {
-            this.id = uuid()
+            this.id = uuid();
         } else {
-            throw new Error('nie można zmienić istniejące pole')
+            throw new Error('nie można zmienić istniejące pole');
         }
-        await pool.execute("INSERT INTO `branch` (id,branchName,city,postCode,address) VALUES (:id,:branchName,:city,:postCode,:address) ", this);
+        await pool.execute('INSERT INTO `branch` (id,branchName,city,postCode,address) VALUES (:id,:branchName,:city,:postCode,:address) ', this);
         return this.id;
     }
 
     async editBranch() {
-        await pool.execute("UPDATE `branch` SET `branchName` = :branchName, `city` = :city, `postCode` = :postCode," +
-            " `address` = :address WHERE `id` = :id", this);
+        await pool.execute('UPDATE `branch` SET `branchName` = :branchName, `city` = :city, `postCode` = :postCode,' +
+            ' `address` = :address WHERE `id` = :id', this);
         return this.id;
     }
 
     async deleteBranch() {
-        await pool.execute("DELETE FROM `branch` WHERE `branchName` = :branchName", this);
+        await pool.execute('DELETE FROM `branch` WHERE `branchName` = :branchName', this);
         return this.id;
     }
 }

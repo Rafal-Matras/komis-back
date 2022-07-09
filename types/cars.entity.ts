@@ -56,7 +56,7 @@ export interface SearchCar {
     priceFrom: number;
     priceTo: number;
     transmission: string;
-    equipment: string;
+    equipment: string[];
 }
 
 export interface CarBuy {

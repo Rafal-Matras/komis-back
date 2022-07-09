@@ -4,11 +4,6 @@ import {CarRecord} from '../records/car.record';
 import {EditCarRecord} from '../records/editCar.record';
 import {BranchRecord} from '../records/branch.record';
 
-interface DataQuery {
-    name: string;
-    model: string;
-}
-
 export const carsRouter = Router();
 
 carsRouter
@@ -37,13 +32,13 @@ carsRouter
     })
 
 
-    .get('/search/:name/:value', async (req, res) => {
-        const {name, value} = req.params;
-        console.log('name', name);
-        console.log('value', value);
-        const cars = await CarRecord.findSearchCars(name, value);
-        // res.json(cars)
-    })
+    // .get('/search/:name/:value', async (req, res) => {
+    //     const {name, value} = req.params;
+    //     console.log('name', name);
+    //     console.log('value', value);
+    //     const cars = await CarRecord.findSearchCars(name, value);
+    //     // res.json(cars)
+    // })
 
 
     .post('/', async (req, res) => {
@@ -98,9 +93,30 @@ carsRouter
         }
     })
 
-    .get('/edit/:name', async (req, res) => {
-        const car = await EditCarRecord.findOneMark(req.params.name);
-        res.json(car);
+    .get('/edit/:type/:name?', async (req, res) => {
+        const {type, name} = req.params;
+        switch (type) {
+            case 'mark':
+                const oneMarkName = await EditCarRecord.findOneMark(name);
+                res.json(oneMarkName);
+                break;
+            case 'model':
+                const allModelName = await EditCarRecord.findOneModel(name);
+                res.json(allModelName);
+                break;
+            case 'equipment':
+                const allEquipmentName = await EditCarRecord.findOneEquipment(name);
+                res.json(allEquipmentName);
+                break;
+            case 'fuel':
+                const allFuelName = await EditCarRecord.findOneFuel(name);
+                res.json(allFuelName);
+                break;
+            case 'type':
+                const allTypeName = await EditCarRecord.findOneType(name);
+                res.json(allTypeName);
+                break;
+        }
     })
 
     .post('/edit/:type', async (req, res) => {
@@ -131,8 +147,8 @@ carsRouter
         res.json(editCar.id);
     })
 
-    .delete('/edit/:item', async (req, res) => {
-        const type = req.params.item;
+    .delete('/edit/:type', async (req, res) => {
+        const type = req.params.type;
         const {carValue} = req.body;
         switch (type) {
             case 'mark':
@@ -161,4 +177,4 @@ carsRouter
                 res.json(typeDelete.id);
                 break;
         }
-    })
+    });

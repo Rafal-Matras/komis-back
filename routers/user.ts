@@ -1,7 +1,7 @@
-import {Router} from 'express'
+import {Router} from 'express';
 
-import {UserRecord} from "../records/user.record";
-import {BranchRecord} from "../records/branch.record";
+import {UserRecord} from '../records/user.record';
+import {BranchRecord} from '../records/branch.record';
 
 export const userRouter = Router();
 
@@ -20,11 +20,12 @@ userRouter
 
     .get('/checklogin/:login', async (req, res) => {
         const user = await UserRecord.findOneUserLogin(req.params.login);
-        if (user) {
-            res.json(true);
-        } else {
-            res.json(false);
-        }
+        res.json(!!user);
+    })
+
+    .get('/checkemail/:email', async (req, res) => {
+        const user = await UserRecord.findOneUserEmail(req.params.email);
+        res.json(!!user);
     })
 
     .post('/', async (req, res) => {
@@ -44,6 +45,7 @@ userRouter
 
     .put('/edit/:login', async (req, res) => {
         const {name, lastName, login, email, role, branchId} = req.body;
+        console.log(req.body);
         const user = await UserRecord.findOneUserLogin(req.params.login) as UserRecord;
         const branch = await BranchRecord.findOneBranchName(branchId);
         user.name = name;
@@ -53,8 +55,7 @@ userRouter
         user.role = role;
         user.branchId = branch.id;
         await user.editUser();
-        const data = `${user.name}${user.lastName}${user.email}${user.login}${user.branchId}`
-        res.json(data);
+        res.json(user.id);
     })
 
     .delete('/:login', async (req, res) => {

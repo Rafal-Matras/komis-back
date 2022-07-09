@@ -9,6 +9,7 @@ export interface Consumer extends SimpleConsumer {
     description: string;
     keeper: string;
     option: string;
+    branch: string;
 }
 
 export interface ConsumerReserved extends SimpleConsumer {

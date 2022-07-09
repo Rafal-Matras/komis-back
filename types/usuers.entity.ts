@@ -14,6 +14,7 @@ export interface User extends SimpleUser {
 
 export interface List extends SimpleUser {
     branchName: string;
+    role: string;
 }
 
 export interface Roles {

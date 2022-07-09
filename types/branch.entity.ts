@@ -13,7 +13,7 @@ export interface BranchNames {
 }
 
 export interface Company {
-    id?: number;
+    id?: string;
     name: string;
     city: string;
     postCode: string;

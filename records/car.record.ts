@@ -39,8 +39,84 @@ export class CarRecord implements Car {
     constructor(obj: Car) {
 
         if (!obj.mark || obj.mark.length > 15) {
-            throw new ValidationError('nazwa filli nie może być pusta ani przekraczać 6 znaków.');
+            throw new ValidationError('model nie może być pusty ani przekraczać 15 znaków.');
         }
+        if (!obj.model || obj.model.length > 20) {
+            throw new ValidationError('marka nie może być pusta ani przekraczać 20 znaków.');
+        }
+        if (!obj.type || obj.type.length > 10) {
+            throw new ValidationError('typ nadwozia nie może być pusty ani przekraczać 10 znaków.');
+        }
+        if (!obj.fuel || obj.fuel.length > 15) {
+            throw new ValidationError('rodzaj paliwa nie może być pusty ani przekraczać 15 znaków.');
+        }
+        if (!obj.yearProduction || obj.yearProduction > 9999) {
+            throw new ValidationError('rok produkcji nie może być pusty ani być większa niż 9999.');
+        }
+        if (!obj.engineCapacity || obj.engineCapacity > 9999) {
+            throw new ValidationError('pojemnośc silnika nie może być pusta ani być większa niż 9999.');
+        }
+        if (!obj.power || obj.power > 9999) {
+            throw new ValidationError('moc silnika nie może być pusta ani być większa niż 9999.');
+        }
+        if (!obj.transmission || obj.transmission.length > 12) {
+            throw new ValidationError('skrzynia biegów nie może być pusta ani przekraczać 12 znaków.');
+        }
+        if (!obj.drive || obj.drive.length > 20) {
+            throw new ValidationError('napęd nie może być pusty ani przekraczać 20 znaków.');
+        }
+        if (!obj.color || obj.color.length > 16) {
+            throw new ValidationError('kolor nie może być pusty ani przekraczać 16 znaków.');
+        }
+        if (!obj.mileage || obj.mileage > 9999999) {
+            throw new ValidationError('przebieg nie może być pusty ani być większa niż 9999999.');
+        }
+        if (!obj.doers || obj.doers.length > 1) {
+            throw new ValidationError('liczba dzwi nie może być pusta ani być większa niż 9.');
+        }
+        if (!obj.seats || obj.seats.length > 1) {
+            throw new ValidationError('liczba miejsc nie może być pusta ani być większa niż 9.');
+        }
+        if (!obj.price || obj.price > 9999999) {
+            throw new ValidationError('cena nie może być pusta ani być większa niż 9999999.');
+        }
+        if (!obj.pricePurchase || obj.pricePurchase > 9999999) {
+            throw new ValidationError('cena zakupu nie może być pusta ani być większa niż 9999999.');
+        }
+        if (!obj.vin || obj.vin.length > 17) {
+            throw new ValidationError('nr. Vin nie może być pusty ani być przekraczać 17 znaków.');
+        }
+        if (!obj.dateOverview || obj.dateOverview.length > 10) {
+            throw new ValidationError('data przeglądu nie może być pusta ani być przekraczać 10 znaków.');
+        }
+        if (!obj.dateOC || obj.dateOC.length > 10) {
+            throw new ValidationError('data OC nie może być pusta ani być przekraczać 10 znaków.');
+        }
+        if (!obj.datePurchase || obj.datePurchase.length > 10) {
+            throw new ValidationError('data zakupu nie może być pusta ani być przekraczać 10 znaków.');
+        }
+        if (!obj.registration || obj.registration.length > 10) {
+            throw new ValidationError('nr rejestracyjny nie może być pusta ani być przekraczać 10 znaków.');
+        }
+        if (!obj.equipment || obj.equipment.length > 800) {
+            throw new ValidationError('wyposarzenie nie może być puste ani być przekraczać 800 znaków.');
+        }
+        if (!obj.description || obj.description.length > 600) {
+            throw new ValidationError('opis nie może być pusty ani być przekraczać 600 znaków.');
+        }
+        if (!obj.reserved || obj.reserved.length > 250) {
+            throw new ValidationError('rezerwacja nie może być pusta ani być przekraczać 250 znaków.');
+        }
+        if (!obj.sold || obj.sold.length > 3) {
+            throw new ValidationError('sprzedany nie może być pusty ani być przekraczać 3 znaków.');
+        }
+        if (!obj.advance || obj.advance.length > 100) {
+            throw new ValidationError('zaliczka nie może być pusta ani być przekraczać 100 znaków.');
+        }
+        if (!obj.location || obj.location.length > 36) {
+            throw new ValidationError('lokalizacja nie może być pusta ani być przekraczać 36 znaków.');
+        }
+
 
         this.id = obj.id;
         this.mark = obj.mark;
@@ -96,12 +172,6 @@ export class CarRecord implements Car {
             id,
         }) as CarResults;
         return results.length < 1 ? null : new CarRecord(results[0]);
-    }
-
-    static async findSearchCars(name: string, value: string) {
-        const x = `SELECT * FROM cars WHERE  ${name} LIKE '%${value}%'`;
-        const [results] = await pool.execute(`${x}`);
-        console.log('data--', results);
     }
 
     async insertCar() {
