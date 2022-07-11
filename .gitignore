@@ -4,6 +4,7 @@
 
 ### Node ###
 .idea
+config/config.ts
 # Logs
 logs
 *.log
