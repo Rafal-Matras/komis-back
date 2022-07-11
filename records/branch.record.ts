@@ -26,8 +26,8 @@ export class BranchRecord implements Branch {
         if (!obj.postCode || obj.postCode.length > 6) {
             throw new ValidationError('kod pocztowy nie może być pusty ani przekraczać 6 znaków.');
         }
-        if (!obj.address || obj.address.length > 60) {
-            throw new ValidationError('adres nie może być pusty ani przekraczać 60 znaków.');
+        if (!obj.address || obj.address.length > 30) {
+            throw new ValidationError('adres nie może być pusty ani przekraczać 30 znaków.');
         }
         if (!obj.phone || obj.phone.length > 14) {
             throw new ValidationError('telefon nie może być pusty ani przekraczać 14 znaków.');
