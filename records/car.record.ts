@@ -98,11 +98,11 @@ export class CarRecord implements Car {
         if (!obj.registration || obj.registration.length > 10) {
             throw new ValidationError('nr rejestracyjny nie może być pusta ani być przekraczać 10 znaków.');
         }
-        if (!obj.equipment || obj.equipment.length > 800) {
-            throw new ValidationError('wyposarzenie nie może być puste ani być przekraczać 800 znaków.');
+        if (!obj.equipment || obj.equipment.length > 2000) {
+            throw new ValidationError('wyposarzenie nie może być puste ani być przekraczać 2000 znaków.');
         }
-        if (!obj.description || obj.description.length > 600) {
-            throw new ValidationError('opis nie może być pusty ani być przekraczać 600 znaków.');
+        if (!obj.description || obj.description.length > 2000) {
+            throw new ValidationError('opis nie może być pusty ani być przekraczać 2000 znaków.');
         }
         if (!obj.reserved || obj.reserved.length > 250) {
             throw new ValidationError('rezerwacja nie może być pusta ani być przekraczać 250 znaków.');
