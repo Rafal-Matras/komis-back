@@ -49,12 +49,13 @@ branchRouter
     })
 
     .put('/:branchName', async (req, res) => {
-        const {branchName, city, postCode, address} = req.body;
+        const {branchName, city, postCode, address, phone} = req.body;
         const branch = await BranchRecord.findOneBranchName(req.params.branchName) as BranchRecord;
         branch.branchName = branchName;
         branch.city = city;
         branch.postCode = postCode;
         branch.address = address;
+        branch.phone = phone;
         await branch.editBranch();
         res.json(`${branchName}${city}${postCode}${address}`);
     })
