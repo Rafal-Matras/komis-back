@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 import {config} from './config/config';
 import {userRouter} from './routers/user';
@@ -15,6 +16,10 @@ const app = express();
 app.use(express.json());
 app.use(cors({
     origin: corsOrigin,
+}));
+app.use(rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 100,
 }));
 
 app.use('/apikomis/login', loginRouter);
