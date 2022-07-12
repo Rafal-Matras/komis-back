@@ -17,12 +17,12 @@ app.use(cors({
     origin: corsOrigin,
 }));
 
-app.use('/login', loginRouter);
-app.use('/users', userRouter);
-app.use('/cars', carsRouter);
-app.use('/branches', branchRouter);
-app.use('/consumers', consumerRouter);
-app.use('/company', companyRouter);
+app.use('/apikomis/login', loginRouter);
+app.use('/apikomis/users', userRouter);
+app.use('/apikomis/cars', carsRouter);
+app.use('/apikomis/branches', branchRouter);
+app.use('/apikomis/consumers', consumerRouter);
+app.use('/apikomis/company', companyRouter);
 
 app.listen(port, hostName, () => {
     console.log(`server start on http://${hostName}:${port}`);
