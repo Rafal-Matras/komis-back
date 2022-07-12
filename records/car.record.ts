@@ -153,7 +153,7 @@ export class CarRecord implements Car {
     }
 
     static async findCarsViews(location: string) {
-        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE `location` = :location AND `sold` = :sold', {
+        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE `location` = :location AND `sold` = :sold ORDER BY `mark`,`model`', {
             location,
             sold: 'N'
         }) as CarResults;
@@ -161,7 +161,7 @@ export class CarRecord implements Car {
     }
 
     static async findAllCarsViews() {
-        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE  `sold` = :sold', {
+        const [results] = await pool.execute('SELECT `id`, `mark`, `model`, `type`, `fuel`, `yearProduction`,`engineCapacity`, `power`, `color`, `mileage`,`transmission`, `doers`, `seats`, `price`,`equipment`, `reserved`, `advance` FROM `cars` WHERE  `sold` = :sold ORDER BY `mark`,`model`', {
             sold: 'N'
         }) as CarResults;
         return results.length < 1 ? null : results;
