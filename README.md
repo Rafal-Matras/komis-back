@@ -1,5 +1,7 @@
 Backend aplikacji wykonany w Node.js przy użyciu frameworka express
 
+Projekt można zobaczyć na stronie https://komis.rafalmatras.networkmanager.pl
+
 Aplikacja Komis samochodowy została stworzona na potrzeby fikcyjnego komisu samochodowego posiadającego kilka oddziałów.
 
 W aplikacji istnieją trzy rodzaje użytkowników.
